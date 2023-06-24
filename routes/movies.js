@@ -38,7 +38,7 @@ router.post('/', authMiddleware.verifyToken, upload.single('poster'), async (req
   }
 });
 
-router.get('/', authMiddleware.verifyToken, async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const movies = await Movie.find();
 
