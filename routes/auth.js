@@ -1,4 +1,3 @@
-// routes/auth.js
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
@@ -23,7 +22,6 @@ router.post('/signup', upload.single('image'), async (req, res) => {
   try {
     const { username, password, email } = req.body;
 
-    // Check if the username or email already exists
     const existingUser = await User.findOne({
       $or: [{ username }, { email }],
     });

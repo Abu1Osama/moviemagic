@@ -1,4 +1,3 @@
-// routes/favorites.js
 const express = require('express');
 const router = express.Router();
 const authMiddleware = require('../middlewares/auth');
@@ -19,7 +18,6 @@ router.post('/', authMiddleware.verifyToken, async (req, res) => {
       return res.status(404).json({ error: 'Movie not found.' });
     }
 
-    // Add the movie to the user's favorites list
     user.favorites.push(movieId);
     await user.save();
 
