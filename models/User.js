@@ -1,4 +1,3 @@
-// models/User.js
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
@@ -7,22 +6,25 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  password: {
-    type: String,
-    required: true,
-  },
   email: {
     type: String,
     required: true,
     unique: true,
   },
-  image: {
+  password: {
     type: String,
+    required: true,
   },
-  favorites: [
+  favoriteMovies: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Movie',
+    },
+  ],
+  favoriteSerials: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Serial',
     },
   ],
 });

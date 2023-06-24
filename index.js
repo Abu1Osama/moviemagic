@@ -3,6 +3,8 @@ const app = express();
 const connectDB = require('./controllers/db');
 const authRoutes = require('./routes/auth');
 const movieRoutes = require('./routes/movies');
+const serialRoutes = require('./routes/serials');
+const songRoutes = require('./routes/songs'); // Add this line
 const favoriteRoutes = require('./routes/favorites');
 const dotenv = require('dotenv');
 const path = require('path');
@@ -15,6 +17,8 @@ app.use(express.static(path.join(__dirname, 'uploads')));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/movies', movieRoutes);
+app.use('/api/serials', serialRoutes);
+app.use('/api/songs', songRoutes); // Add this line
 app.use('/api/favorites', favoriteRoutes);
 
 const port = process.env.PORT || 3000;
