@@ -7,12 +7,14 @@ const serialRoutes = require("./routes/serial");
 const songRoutes = require("./routes/Song"); // Add this line
 const favoriteRoutes = require("./routes/favorites");
 const dotenv = require("dotenv");
+const cors = require("cors");
 const path = require("path");
 
 dotenv.config();
 connectDB();
 
 app.use(express.json());
+app.use(cors());
 app.use(express.static(path.join(__dirname, "uploads")));
 
 app.use("/api/auth", authRoutes);
