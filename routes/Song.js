@@ -64,12 +64,15 @@ router.get("/", async (req, res) => {
 
     const sort = req.query.sort || "-releaseYear"; // Default sort by release year in descending order
 
+    const totalSongs = await Song.countDocuments(); // Count total number of songs in the collection
+    const totalPages = Math.ceil(totalSongs / limit);
+
     const songs = await Song.find()
       .sort(sort)
       .skip(skip)
       .limit(limit);
 
-    res.json({ songs });
+    res.json({ songs, totalPages });
   } catch (error) {
     res.status(500).json({ error: "An error occurred while retrieving the songs." });
   }
