@@ -58,17 +58,15 @@ router.put("/:id", async (req, res) => {
 // Route for getting all songs with pagination and sorting
 router.get("/", async (req, res) => {
   try {
-    const { sort } = req.query;
-    const sortOptions = { releaseYear: sort === "desc" ? -1 : 1 }; // Sort by releaseYear in descending or ascending order
+    const sort = req.query.sort || "-releaseYear"; // Default sort by release year in descending order
 
-    const songs = await Song.find().sort(sortOptions);
+    const songs = await Song.find().sort(sort);
 
     res.json({ songs });
   } catch (error) {
     res.status(500).json({ error: "An error occurred while retrieving the songs." });
   }
 });
-
 // Route for filtering songs by singer
 router.get("/singer", async (req, res) => {
   try {
