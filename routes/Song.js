@@ -79,5 +79,20 @@ router.get("/singer", async (req, res) => {
     res.status(500).json({ error: "An error occurred while filtering the songs." });
   }
 });
+router.delete("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const song = await Song.findByIdAndDelete(id);
+
+    if (!song) {
+      return res.status(404).json({ error: "Song not found." });
+    }
+
+    res.status(200).json({ message: "Song deleted successfully." });
+  } catch (error) {
+    res.status(500).json({ error: "An error occurred while deleting the song." });
+  }
+});
 
 module.exports = router;
