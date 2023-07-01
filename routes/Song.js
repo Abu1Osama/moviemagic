@@ -58,26 +58,13 @@ router.put("/:id", async (req, res) => {
 // Route for getting all songs with pagination and sorting
 router.get("/", async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1;
-    const limit = 10;
-    const skip = (page - 1) * limit;
+    const songs = await Song.find();
 
-    const sort = req.query.sort || "-releaseYear"; // Default sort by release year in descending order
-
-    const totalSongs = await Song.countDocuments(); // Count total number of songs in the collection
-    const totalPages = Math.ceil(totalSongs / limit);
-
-    const songs = await Song.find()
-      .sort(sort)
-      .skip(skip)
-      .limit(limit);
-
-    res.json({ songs, totalPages });
+    res.json({ songs });
   } catch (error) {
     res.status(500).json({ error: "An error occurred while retrieving the songs." });
   }
 });
-
 // Route for filtering songs by singer
 router.get("/singer", async (req, res) => {
   try {
