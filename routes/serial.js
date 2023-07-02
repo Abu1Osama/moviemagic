@@ -19,6 +19,8 @@ router.post("/", async (req, res) => {
       poster,
       details,
       episodes,
+      video_id,
+      trailer_id,
     } = req.body;
 
     const serial = new Serial({
@@ -31,6 +33,8 @@ router.post("/", async (req, res) => {
       poster,
       details,
       episodes,
+      video_id,
+      trailer_id
     });
 
     await serial.save();

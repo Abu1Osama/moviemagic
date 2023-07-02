@@ -1,22 +1,28 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const serialSchema = new mongoose.Schema({
+  video_id: String,
+  trailer_id: String,
   title: {
     type: String,
     required: true,
   },
-  genre: [{
-    type: String,
-    required: true,
-  }],
+  genre: [
+    {
+      type: String,
+      required: true,
+    },
+  ],
   director: {
     type: String,
     required: true,
   },
-  cast: [{
-    type: String,
-    required: true,
-  }],
+  cast: [
+    {
+      type: String,
+      required: true,
+    },
+  ],
   rating: {
     type: Number,
     required: true,
@@ -39,4 +45,4 @@ const serialSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model('Serial', serialSchema);
+module.exports = mongoose.model("Serial", serialSchema);
