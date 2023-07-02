@@ -76,37 +76,13 @@ router.get("/:id", async (req, res) => {
 
 router.put("/:id", async (req, res) => {
   try {
-    const { id } = req.params;
-    const {
-      video_id,
-      trailer_id,
-      name,
-      genre,
-      director,
-      cast,
-      rating,
-      year_of_release,
-      poster,
-      details,
-      duration,
-    } = req.body;
 
-    const movie = await Movie.findByIdAndUpdate(
-      id,
-      {
-        video_id,
-        trailer_id,
-        name,
-        genre,
-        director,
-        cast,
-        rating,
-        year_of_release,
-        poster,
-        details,
-        duration,
-      },
-      { new: true }
+    const { id } = req.params;
+    const updatedMovieData = req.body;
+   
+
+    const movie = await Movie.findByIdAndUpdate(id,updatedMovieData
+   
     );
 
     if (!movie) {
