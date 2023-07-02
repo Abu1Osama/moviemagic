@@ -2,6 +2,9 @@ const express = require("express");
 const router = express.Router();
 const authMiddleware = require("../middlewares/auth");
 const Movie = require("../models/Movie");
+const mongoose = require("mongoose");
+const ObjectId = mongoose.Types.ObjectId;
+const objectId = new ObjectId();
 
 router.post("/", async (req, res) => {
   try {
@@ -76,14 +79,10 @@ router.get("/:id", async (req, res) => {
 
 router.put("/:id", async (req, res) => {
   try {
-
     const { id } = req.params;
     const updatedMovieData = req.body;
-   
 
-    const movie = await Movie.findByIdAndUpdate(id,updatedMovieData
-   
-    );
+    const movie = await Movie.findByIdAndUpdate(id, updatedMovieData);
 
     if (!movie) {
       return res.status(404).json({ error: "Movie not found." });
@@ -97,7 +96,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-router.delete("/:id",  async (req, res) => {
+router.delete("/:id", async (req, res) => {
   try {
     const { id } = req.params;
 
