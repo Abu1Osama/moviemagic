@@ -48,9 +48,10 @@ router.put("/:id", async (req, res) => {
       return res.status(404).json({ error: "Song not found." });
     }
 
-    res.status(200).json({ message: "Song updated successfully." });
+    res.status(200).json({  });
   } catch (error) {
-    res.status(500).json({ error: "An error occurred while updating the song." });
+    console.log(error)
+    res.status(500).json({ message: error });
     console.log(error)
   }
 });
