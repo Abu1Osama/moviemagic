@@ -32,17 +32,17 @@ router.post('/',  async (req, res) => {
 });
 
 
-router.get("/",async(req,res)=>{
-  console.log(req.query)
-  let {title} = req.query
-  title = title ?  title.toLowerCase() : null
- try {
-  const serials = await Serial.find({"title":title})
-  res.status(200).send(serials)
- } catch (error) {
-  res.status(400).send({"msg":error.message})
- }
-})
+// router.get("/",async(req,res)=>{
+//   console.log(req.query)
+//   let {title} = req.query
+//   title = title ?  title.toLowerCase() : null
+//  try {
+//   const serials = await Serial.find({"title":title})
+//   res.status(200).send(serials)
+//  } catch (error) {
+//   res.status(400).send({"msg":error.message})
+//  }
+// })
 
 
 router.get("/", async (req, res) => {
