@@ -48,8 +48,10 @@ router.post("/", async (req, res) => {
 });
 
 router.get("/", async (req, res) => {
+  const sort = req.query.sort || "-year_of_release";
+
   try {
-    const movies = await Movie.find();
+    const movies = await Movie.find().sort(sort);
 
     res.json({ movies });
   } catch (error) {
