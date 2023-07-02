@@ -9,10 +9,10 @@ const objectId = new ObjectId();
 
 router.post('/',  async (req, res) => {
   try {
-    const { name, genre, director, cast, rating, year_of_release, poster, details, episodes } = req.body;
+    const { title, genre, director, cast, rating, year_of_release, poster, details, episodes } = req.body;
 
     const serial = new Serial({
-      name,
+      title,
       genre,
       director,
       cast,
@@ -47,13 +47,13 @@ router.get("/",async(req,res)=>{
 
 router.get("/", async (req, res) => {
   console.log(req.query);
-  let { name } = req.query;
-  name = name ? title.toLowerCase() : null;
+  let { title } = req.query;
+  title = title ? title.toLowerCase() : null;
   try {
     let query = {};
 
     if (title) {
-      query.name = name;
+      query.title = title;
     }
 
     const serials = await Serial.find(query).sort({ year_of_release: 1 });
@@ -67,11 +67,11 @@ router.get("/", async (req, res) => {
 router.patch('/:id',  async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, genre, director, cast, rating, year_of_release, poster, details, episodes } = req.body;
+    const { title, genre, director, cast, rating, year_of_release, poster, details, episodes } = req.body;
 
     const serial = await Serial.findByIdAndUpdate(
       id,
-      { name, genre, director, cast, rating, year_of_release, poster, details, episodes },
+      { title, genre, director, cast, rating, year_of_release, poster, details, episodes },
       { new: true }
     );
 
