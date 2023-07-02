@@ -1,15 +1,25 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const Serial = require('../models/Serial');
-const authMiddleware = require('../middlewares/auth');
+const Serial = require("../models/Serial");
+const authMiddleware = require("../middlewares/auth");
 const mongoose = require("mongoose");
 const ObjectId = mongoose.Types.ObjectId;
 
 const objectId = new ObjectId();
 
-router.post('/',  async (req, res) => {
+router.post("/", async (req, res) => {
   try {
-    const { title, genre, director, cast, rating, year_of_release, poster, details, episodes } = req.body;
+    const {
+      title,
+      genre,
+      director,
+      cast,
+      rating,
+      year_of_release,
+      poster,
+      details,
+      episodes,
+    } = req.body;
 
     const serial = new Serial({
       title,
@@ -25,12 +35,13 @@ router.post('/',  async (req, res) => {
 
     await serial.save();
 
-    res.status(201).json({ message: 'Serial created successfully.' });
+    res.status(201).json({ message: "Serial created successfully." });
   } catch (error) {
-    res.status(500).json({ error: 'An error occurred while creating the serial.' });
+    res
+      .status(500)
+      .json({ error: "An error occurred while creating the serial." });
   }
 });
-
 
 // router.get("/",async(req,res)=>{
 //   console.log(req.query)
@@ -43,7 +54,6 @@ router.post('/',  async (req, res) => {
 //   res.status(400).send({"msg":error.message})
 //  }
 // })
-
 
 router.get("/", async (req, res) => {
   console.log(req.query);
@@ -64,39 +74,39 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.patch('/:id',  async (req, res) => {
+router.put("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, genre, director, cast, rating, year_of_release, poster, details, episodes } = req.body;
+    const updatedSerialData = req.body;
 
-    const serial = await Serial.findByIdAndUpdate(
-      id,
-      { title, genre, director, cast, rating, year_of_release, poster, details, episodes },
-      { new: true }
-    );
+    const serial = await Serial.findByIdAndUpdate(id, updatedSerialData);
 
     if (!serial) {
-      return res.status(404).json({ error: 'Serial not found.' });
+      return res.status(404).json({ error: "Serial not found." });
     }
 
-    res.json({ message: 'Serial updated successfully.' });
+    res.json({ message: "Serial updated successfully." });
   } catch (error) {
-    res.status(500).json({ error: 'An error occurred while updating the serial.' });
+    res
+      .status(500)
+      .json({ error: "An error occurred while updating the serial." });
   }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete("/:id", async (req, res) => {
   try {
     const { id } = req.params;
 
     const serial = await Serial.findByIdAndDelete(id);
     if (!serial) {
-      return res.status(404).json({ error: 'Serial not found.' });
+      return res.status(404).json({ error: "Serial not found." });
     }
 
-    res.json({ message: 'Serial deleted successfully.' });
+    res.json({ message: "Serial deleted successfully." });
   } catch (error) {
-    res.status(500).json({ error: 'An error occurred while deleting the serial.' });
+    res
+      .status(500)
+      .json({ error: "An error occurred while deleting the serial." });
   }
 });
 
