@@ -47,13 +47,13 @@ router.get("/",async(req,res)=>{
 
 router.get("/", async (req, res) => {
   console.log(req.query);
-  let { title } = req.query;
-  title = title ? title.toLowerCase() : null;
+  let { name } = req.query;
+  name = name ? title.toLowerCase() : null;
   try {
     let query = {};
 
     if (title) {
-      query.title = title;
+      query.name = name;
     }
 
     const serials = await Serial.find(query).sort({ year_of_release: 1 });
