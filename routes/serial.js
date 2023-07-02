@@ -2,8 +2,12 @@ const express = require('express');
 const router = express.Router();
 const Serial = require('../models/Serial');
 const authMiddleware = require('../middlewares/auth');
+const mongoose = require("mongoose");
+const ObjectId = mongoose.Types.ObjectId;
 
-router.post('/', authMiddleware.verifyToken,  async (req, res) => {
+const objectId = new ObjectId();
+
+router.post('/',  async (req, res) => {
   try {
     const { name, genre, director, cast, rating, year_of_release, poster, details, episodes } = req.body;
 
@@ -27,33 +31,40 @@ router.post('/', authMiddleware.verifyToken,  async (req, res) => {
   }
 });
 
-router.get('/', async (req, res) => {
+
+router.get("/",async(req,res)=>{
+  console.log(req.query)
+  let {title} = req.query
+  title = title ?  title.toLowerCase() : null
+ try {
+  const serials = await Serial.find({"title":title})
+  res.status(200).send(serials)
+ } catch (error) {
+  res.status(400).send({"msg":error.message})
+ }
+})
+
+
+router.get("/", async (req, res) => {
+  console.log(req.query);
+  let { title } = req.query;
+  title = title ? title.toLowerCase() : null;
   try {
-    const serials = await Serial.find();
+    let query = {};
 
-    res.json({ serials });
-  } catch (error) {
-    res.status(500).json({ error: 'An error occurred while retrieving the serials.' });
-  }
-});
-
-router.get('/:id',authMiddleware.verifyToken,  async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    const serial = await Serial.findById(id);
-
-    if (!serial) {
-      return res.status(404).json({ error: 'Serial not found.' });
+    if (title) {
+      query.title = title;
     }
 
-    res.json({ serial });
+    const serials = await Serial.find(query).sort({ year_of_release: 1 });
+
+    res.status(200).send(serials);
   } catch (error) {
-    res.status(500).json({ error: 'An error occurred while retrieving the serial.' });
+    res.status(400).send({ msg: error.message });
   }
 });
 
-router.patch('/:id', authMiddleware.verifyToken,  async (req, res) => {
+router.patch('/:id',  async (req, res) => {
   try {
     const { id } = req.params;
     const { name, genre, director, cast, rating, year_of_release, poster, details, episodes } = req.body;
@@ -74,7 +85,7 @@ router.patch('/:id', authMiddleware.verifyToken,  async (req, res) => {
   }
 });
 
-router.delete('/:id',authMiddleware.verifyToken,  async (req, res) => {
+router.delete('/:id', async (req, res) => {
   try {
     const { id } = req.params;
 
