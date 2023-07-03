@@ -70,7 +70,7 @@ router.get("/", async (req, res) => {
       query.title = title;
     }
 
-    const serials = await Serial.find(query).sort({ year_of_release: 1 });
+    const serials = await Serial.find(query).sort({ episodes: 1 });
 
     res.status(200).send(serials);
   } catch (error) {
