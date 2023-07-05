@@ -35,7 +35,6 @@ router.post('/user/signup', async (req, res) => {
     const user = new User({
       email,
       password: hashedPassword,
-      image: req.file?.filename,
       username,
     });
 
@@ -43,7 +42,7 @@ router.post('/user/signup', async (req, res) => {
 
     res.status(201).json({ message: 'User created successfully.' });
   } catch (error) {
-    res.status(500).json({ error: 'An error occurred while creating the user.' });
+    res.status(500).json({  message: error });
   }
 });
 
@@ -93,7 +92,7 @@ router.post('/admin/signup', async (req, res) => {
 
     res.status(201).json({ message: 'Admin created successfully.' });
   } catch (error) {
-    res.status(500).json({ error: 'An error occurred while creating the admin.' });
+    res.status(500).json({message :error });
     console.log(error)
   }
 });
@@ -117,7 +116,7 @@ router.post('/admin/login', async (req, res) => {
 
     res.json({ token });
   } catch (error) {
-    res.status(500).json({ error: 'An error occurred while logging in.' });
+    res.status(500).json({ message:error });
   }
 });
 
