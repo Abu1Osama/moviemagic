@@ -3,7 +3,7 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
-const Admin = require('../models/User');
+const Admin = require('../models/Admin');
 const multer = require('multer');
 const path = require('path');
 
