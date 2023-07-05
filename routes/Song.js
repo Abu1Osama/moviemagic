@@ -3,11 +3,12 @@ const router = express.Router();
 const Song = require("../models/Song");
 const mongoose = require("mongoose");
 const ObjectId = mongoose.Types.ObjectId;
+const authMiddleware = require("../middlewares/auth");
 
 const objectId = new ObjectId();
 
 // Route for creating a new song
-router.post("/", async (req, res) => {
+router.post("/", authMiddleware.verifyAdminToken, async (req, res) => {
   try {
     const { title, artist, duration, releaseYear, video_id, Singer, Poster } = req.body;
 
@@ -36,8 +37,7 @@ router.post("/", async (req, res) => {
 });
 
 // Route for updating a song
-// Route for updating a song
-router.put("/:id", async (req, res) => {
+router.put("/:id", authMiddleware.verifyAdminToken, async (req, res) => {
   try {
     const { id } = req.params;
     const updatedSongData = req.body;
@@ -48,11 +48,9 @@ router.put("/:id", async (req, res) => {
       return res.status(404).json({ error: "Song not found." });
     }
 
-    res.status(200).json({  });
+    res.status(200).json({ message: "Song updated successfully." });
   } catch (error) {
-    console.log(error)
-    res.status(500).json({ message: error });
-    console.log(error)
+    res.status(500).json({ error: "An error occurred while updating the song." });
   }
 });
 
@@ -68,6 +66,7 @@ router.get("/", async (req, res) => {
     res.status(500).json({ error: "An error occurred while retrieving the songs." });
   }
 });
+
 // Route for filtering songs by singer
 router.get("/singer", async (req, res) => {
   try {
@@ -80,7 +79,9 @@ router.get("/singer", async (req, res) => {
     res.status(500).json({ error: "An error occurred while filtering the songs." });
   }
 });
-router.delete("/:id", async (req, res) => {
+
+// Route for deleting a song
+router.delete("/:id", authMiddleware.verifyAdminToken, async (req, res) => {
   try {
     const { id } = req.params;
 

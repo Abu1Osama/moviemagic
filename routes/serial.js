@@ -7,7 +7,8 @@ const ObjectId = mongoose.Types.ObjectId;
 
 const objectId = new ObjectId();
 
-router.post("/", async (req, res) => {
+// Create a new serial (accessible only to admins)
+router.post("/", authMiddleware.verifyAdminToken, async (req, res) => {
   try {
     const {
       title,
@@ -34,38 +35,25 @@ router.post("/", async (req, res) => {
       details,
       episodes,
       video_id,
-      trailer_id
+      trailer_id,
     });
 
     await serial.save();
 
     res.status(201).json({ message: "Serial created successfully." });
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: "An error occurred while creating the serial." });
+    res.status(500).json({ error: "An error occurred while creating the serial." });
   }
 });
 
-// router.get("/",async(req,res)=>{
-//   console.log(req.query)
-//   let {title} = req.query
-//   title = title ?  title.toLowerCase() : null
-//  try {
-//   const serials = await Serial.find({"title":title})
-//   res.status(200).send(serials)
-//  } catch (error) {
-//   res.status(400).send({"msg":error.message})
-//  }
-// })
-
+// Get all serials (accessible to all users)
 router.get("/", async (req, res) => {
-  console.log(req.query);
-  let { title } = req.query;
-  title = title ? title.toLowerCase() : null;
   try {
-    let query = {};
+    console.log(req.query);
+    let { title } = req.query;
+    title = title ? title.toLowerCase() : null;
 
+    let query = {};
     if (title) {
       query.title = title;
     }
@@ -78,7 +66,8 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.put("/:id", async (req, res) => {
+// Update a serial (accessible only to admins)
+router.put("/:id", authMiddleware.verifyAdminToken, async (req, res) => {
   try {
     const { id } = req.params;
     const updatedSerialData = req.body;
@@ -91,13 +80,12 @@ router.put("/:id", async (req, res) => {
 
     res.json({ message: "Serial updated successfully." });
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: "An error occurred while updating the serial." });
+    res.status(500).json({ error: "An error occurred while updating the serial." });
   }
 });
 
-router.delete("/:id", async (req, res) => {
+// Delete a serial (accessible only to admins)
+router.delete("/:id", authMiddleware.verifyAdminToken, async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -108,9 +96,7 @@ router.delete("/:id", async (req, res) => {
 
     res.json({ message: "Serial deleted successfully." });
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: "An error occurred while deleting the serial." });
+    res.status(500).json({ error: "An error occurred while deleting the serial." });
   }
 });
 

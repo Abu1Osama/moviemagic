@@ -3,10 +3,9 @@ const router = express.Router();
 const authMiddleware = require("../middlewares/auth");
 const Movie = require("../models/Movie");
 const mongoose = require("mongoose");
-const ObjectId = mongoose.Types.ObjectId;
-const objectId = new ObjectId();
 
-router.post("/", async (req, res) => {
+// Create a new movie (admin only)
+router.post("/", authMiddleware.verifyAdminToken, async (req, res) => {
   try {
     const {
       video_id,
@@ -40,13 +39,11 @@ router.post("/", async (req, res) => {
 
     res.status(201).json({ message: "Movie created successfully." });
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: "An error occurred while creating the movie." });
-    console.log(error);
+    res.status(500).json({ error: "An error occurred while creating the movie." });
   }
 });
 
+// Get all movies
 router.get("/", async (req, res) => {
   const sort = req.query.sort || "-year_of_release";
 
@@ -55,12 +52,11 @@ router.get("/", async (req, res) => {
 
     res.json({ movies });
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: "An error occurred while retrieving the movies." });
+    res.status(500).json({ error: "An error occurred while retrieving the movies." });
   }
 });
 
+// Get a specific movie by ID
 router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -73,13 +69,12 @@ router.get("/:id", async (req, res) => {
 
     res.json({ movie });
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: "An error occurred while retrieving the movie." });
+    res.status(500).json({ error: "An error occurred while retrieving the movie." });
   }
 });
 
-router.put("/:id", async (req, res) => {
+// Update a movie (admin only)
+router.put("/:id", authMiddleware.verifyAdminToken, async (req, res) => {
   try {
     const { id } = req.params;
     const updatedMovieData = req.body;
@@ -92,13 +87,12 @@ router.put("/:id", async (req, res) => {
 
     res.json({ message: "Movie updated successfully." });
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: "An error occurred while updating the movie." });
+    res.status(500).json({ error: "An error occurred while updating the movie." });
   }
 });
 
-router.delete("/:id", async (req, res) => {
+// Delete a movie (admin only)
+router.delete("/:id", authMiddleware.verifyAdminToken, async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -109,9 +103,7 @@ router.delete("/:id", async (req, res) => {
 
     res.json({ message: "Movie deleted successfully." });
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: "An error occurred while deleting the movie." });
+    res.status(500).json({ error: "An error occurred while deleting the movie." });
   }
 });
 

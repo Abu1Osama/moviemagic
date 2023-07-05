@@ -4,7 +4,7 @@ const authMiddleware = require('../middlewares/auth');
 const User = require('../models/User');
 const Movie = require('../models/Movie');
 
-router.post('/', authMiddleware.verifyToken, async (req, res) => {
+router.post('/', authMiddleware.verifyUserToken, async (req, res) => {
   try {
     const { movieId } = req.body;
 
@@ -27,7 +27,7 @@ router.post('/', authMiddleware.verifyToken, async (req, res) => {
   }
 });
 
-router.get('/', authMiddleware.verifyToken, async (req, res) => {
+router.get('/', authMiddleware.verifyUserToken, async (req, res) => {
   try {
     const user = await User.findById(req.userId).populate('favorites', '-__v');
 
