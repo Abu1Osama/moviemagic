@@ -22,7 +22,7 @@ const upload = multer({ storage });
 // User Signup
 router.post('/user/signup', async (req, res) => {
   try {
-    const { email, password,username } = req.body;
+    const { email, password, username } = req.body;
 
     const existingUser = await User.findOne({ email });
 
@@ -42,7 +42,7 @@ router.post('/user/signup', async (req, res) => {
 
     res.status(201).json({ message: 'User created successfully.' });
   } catch (error) {
-    res.status(500).json({  message: error });
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -72,7 +72,7 @@ router.post('/user/login', async (req, res) => {
 // Admin Signup
 router.post('/admin/signup', async (req, res) => {
   try {
-    const { email, password ,username} = req.body;
+    const { email, password, username } = req.body;
 
     const existingAdmin = await Admin.findOne({ email });
 
@@ -92,8 +92,7 @@ router.post('/admin/signup', async (req, res) => {
 
     res.status(201).json({ message: 'Admin created successfully.' });
   } catch (error) {
-    res.status(500).json({message :error });
-    console.log(error)
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -116,7 +115,7 @@ router.post('/admin/login', async (req, res) => {
 
     res.json({ token });
   } catch (error) {
-    res.status(500).json({ message:error });
+    res.status(500).json({ error: error.message });
   }
 });
 
