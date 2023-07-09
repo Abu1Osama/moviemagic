@@ -4,7 +4,8 @@ const connectDB = require("./controllers/db");
 const authRoutes = require("./routes/auth");
 const movieRoutes = require("./routes/movies");
 const serialRoutes = require("./routes/serial");
-const songRoutes = require("./routes/Song"); // Add this line
+const songRoutes = require("./routes/Song");
+const musicRoutes = require("./routes/Music");
 const favoriteRoutes = require("./routes/favorites");
 const dotenv = require("dotenv");
 const cors = require("cors");
@@ -19,6 +20,7 @@ app.use(express.static(path.join(__dirname, "uploads")));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/movies", movieRoutes);
+app.use("/api/musics", musicRoutes);
 app.use("/api/serials", serialRoutes);
 app.use("/api/songs", songRoutes); // Add this line
 app.use("/api/favorites", favoriteRoutes);
