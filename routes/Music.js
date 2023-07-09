@@ -81,7 +81,7 @@ router.delete("/:id", authMiddleware.verifyAdminToken, async (req, res) => {
   try {
     const { id } = req.params;
 
-    const music = await music.findByIdAndDelete(id);
+    const music = await Music.findByIdAndDelete(id);
 
     if (!music) {
       return res.status(404).json({ error: "music not found." });
