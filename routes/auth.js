@@ -63,7 +63,7 @@ router.post('/user/login', async (req, res) => {
 
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
 
-    res.json({ token });
+    res.json({ token,user });
   } catch (error) {
     res.status(500).json({ error: 'An error occurred while logging in.' });
   }
@@ -113,7 +113,7 @@ router.post('/admin/login', async (req, res) => {
 
     const token = jwt.sign({ adminId: admin._id }, process.env.JWT_SECRET);
 
-    res.json({ token });
+    res.json({ token ,admin});
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
