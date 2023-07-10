@@ -24,7 +24,7 @@ router.post("/", authMiddleware.verifyAdminToken, async (req, res) => {
       releaseYear,
       video_id,
       Singer,
-      Poster
+      Poster,
     });
 
     await music.save();
