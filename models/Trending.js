@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const movieSchema = new mongoose.Schema({
+const trendingSchema = new mongoose.Schema({
   video_id: String,
   trailer_id: String,
   name: String,
@@ -14,4 +14,4 @@ const movieSchema = new mongoose.Schema({
   duration: String
 });
 
-module.exports = mongoose.model('Trending', movieSchema);
+module.exports = mongoose.model('Trending', trendingSchema);
