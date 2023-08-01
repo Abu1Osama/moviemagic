@@ -4,213 +4,102 @@ const authMiddleware = require('../middlewares/auth');
 const User = require('../models/User');
 const Movie = require('../models/Movie');
 const Serial = require('../models/Serial');
-const Song = require('../models/Song')
+const Song = require('../models/Song');
 const FavoriteItems = require('../models/FavouriteItem');
 const mongoose = require("mongoose");
 const ObjectId = mongoose.Types.ObjectId;
-const objectId = new ObjectId();
 
-// Add movie to favorites
-router.post('/', authMiddleware.verifyUserToken, async (req, res) => {
+// Common route for adding and removing items to/from favorites
+router.post('/:itemType', authMiddleware.verifyUserToken, async (req, res) => {
   try {
-    const { movieId } = req.body;
-    const user = await User.findById(req.userId);
+    const { itemType } = req.params;
+    const { itemId } = req.body;
 
+    if (!['movies', 'serials', 'songs'].includes(itemType)) {
+      return res.status(400).json({ error: 'Invalid item type.' });
+    }
+
+    const user = await User.findById(req.userId);
     if (!user) {
       return res.status(404).json({ error: 'User not found.' });
     }
 
-    const movie = await Movie.findById(movieId);
-    if (!movie) {
-      return res.status(404).json({ error: 'Movie not found.' });
-    }
-
     let favoriteItems = await FavoriteItems.findOne({ user: user._id });
-
     if (!favoriteItems) {
       favoriteItems = new FavoriteItems({ user: user._id });
     }
 
-    if (!favoriteItems.movies.includes(movieId)) {
-      favoriteItems.movies.push(movieId);
+    let item;
+    if (itemType === 'movies') {
+      item = await Movie.findById(itemId);
+    } else if (itemType === 'serials') {
+      item = await Serial.findById(itemId);
+    } else if (itemType === 'songs') {
+      item = await Song.findById(itemId);
+    }
+
+    if (!item) {
+      return res.status(404).json({ error: `Item not found with ID: ${itemId}.` });
+    }
+
+    const itemArray = favoriteItems[itemType];
+    if (!itemArray.includes(itemId)) {
+      itemArray.push(itemId);
     }
 
     await favoriteItems.save();
     user.favorites.push(favoriteItems._id);
     await user.save();
 
-    res.json({ message: 'Movie added to favorites successfully.' });
+    res.json({ message: `${itemType.slice(0, -1).toUpperCase()} added to favorites successfully.` });
   } catch (error) {
-    res.status(500).json({ error: 'An error occurred while adding the movie to favorites.' });
+    res.status(500).json({ error: 'An error occurred while adding the item to favorites.' });
+    console.log(error)
   }
 });
 
-// Remove movie from favorites
-router.delete('/:Id', authMiddleware.verifyUserToken, async (req, res) => {
+// Common route for removing items from favorites
+router.delete('/:itemType/:itemId', authMiddleware.verifyUserToken, async (req, res) => {
   try {
-    const { movieId } = req.params;
-    const user = await User.findById(req.userId);
+    const { itemType, itemId } = req.params;
 
+    if (!['movies', 'serials', 'songs'].includes(itemType)) {
+      return res.status(400).json({ error: 'Invalid item type.' });
+    }
+
+    const user = await User.findById(req.userId);
     if (!user) {
       return res.status(404).json({ error: 'User not found.' });
     }
 
     let favoriteItems = await FavoriteItems.findOne({ user: user._id });
-
     if (!favoriteItems) {
       return res.status(404).json({ error: 'Favorite items not found.' });
     }
 
-    if (!favoriteItems.movies.includes(movieId)) {
-      return res.status(404).json({ error: 'Movie not found in favorites.' });
+    const itemArray = favoriteItems[itemType];
+    if (!itemArray.includes(itemId)) {
+      return res.status(404).json({ error: `Item not found in favorites with ID: ${itemId}.` });
     }
 
-    favoriteItems.movies = favoriteItems.movies.filter((id) => id !== movieId);
+    favoriteItems[itemType] = itemArray.filter((id) => id !== itemId);
     await favoriteItems.save();
 
-    res.json({ message: 'Movie removed from favorites successfully.' });
+    res.json({ message: `${itemType.slice(0, -1).toUpperCase()} removed from favorites successfully.` });
   } catch (error) {
-    res.status(500).json({ error: 'An error occurred while removing the movie from favorites.' });
+    res.status(500).json({ error: 'An error occurred while removing the item from favorites.' });
   }
 });
 
-// Add TV serial to favorites
-router.post('/', authMiddleware.verifyUserToken, async (req, res) => {
-  try {
-    const { serialId } = req.body;
-    const user = await User.findById(req.userId);
-
-    if (!user) {
-      return res.status(404).json({ error: 'User not found.' });
-    }
-
-    const serial = await Serial.findById(serialId);
-    if (!serial) {
-      return res.status(404).json({ error: 'TV serial not found.' });
-    }
-
-    let favoriteItems = await FavoriteItems.findOne({ user: user._id });
-
-    if (!favoriteItems) {
-      favoriteItems = new FavoriteItems({ user: user._id });
-    }
-
-    if (!favoriteItems.serials.includes(serialId)) {
-      favoriteItems.serials.push(serialId);
-    }
-
-    await favoriteItems.save();
-    user.favorites.push(favoriteItems._id);
-    await user.save();
-
-    res.json({ message: 'TV serial added to favorites successfully.' });
-  } catch (error) {
-    res.status(500).json({ error: 'An error occurred while adding the TV serial to favorites.' });
-  }
-});
-
-// Remove TV serial from favorites
-router.delete('/:Id', authMiddleware.verifyUserToken, async (req, res) => {
-  try {
-    const { serialId } = req.params;
-    const user = await User.findById(req.userId);
-
-    if (!user) {
-      return res.status(404).json({ error: 'User not found.' });
-    }
-
-    let favoriteItems = await FavoriteItems.findOne({ user: user._id });
-
-    if (!favoriteItems) {
-      return res.status(404).json({ error: 'Favorite items not found.' });
-    }
-
-    if (!favoriteItems.serials.includes(serialId)) {
-      return res.status(404).json({ error: 'TV serial not found in favorites.' });
-    }
-
-    favoriteItems.serials = favoriteItems.serials.filter((id) => id !== serialId);
-    await favoriteItems.save();
-
-    res.json({ message: 'TV serial removed from favorites successfully.' });
-  } catch (error) {
-    res.status(500).json({ error: 'An error occurred while removing the TV serial from favorites.' });
-  }
-});
-
-// Add song to favorites
-router.post('/', authMiddleware.verifyUserToken, async (req, res) => {
-  try {
-    const { songId } = req.body;
-    const user = await User.findById(req.userId);
-
-    if (!user) {
-      return res.status(404).json({ error: 'User not found.' });
-    }
-
-    const song = await Song.findById(songId);
-    if (!song) {
-      return res.status(404).json({ error: 'Song not found.' });
-    }
-
-    let favoriteItems = await FavoriteItems.findOne({ user: user._id });
-
-    if (!favoriteItems) {
-      favoriteItems = new FavoriteItems({ user: user._id });
-    }
-
-    if (!favoriteItems.songs.includes(songId)) {
-      favoriteItems.songs.push(songId);
-    }
-
-    await favoriteItems.save();
-    user.favorites.push(favoriteItems._id);
-    await user.save();
-
-    res.json({ message: 'Song added to favorites successfully.' });
-  } catch (error) {
-    res.status(500).json({ error: 'An error occurred while adding the song to favorites.' });
-  }
-});
-
-// Remove song from favorites
-router.delete('/:Id', authMiddleware.verifyUserToken, async (req, res) => {
-  try {
-    const { songId } = req.params;
-    const user = await User.findById(req.userId);
-
-    if (!user) {
-      return res.status(404).json({ error: 'User not found.' });
-    }
-
-    let favoriteItems = await FavoriteItems.findOne({ user: user._id });
-
-    if (!favoriteItems) {
-      return res.status(404).json({ error: 'Favorite items not found.' });
-    }
-
-    if (!favoriteItems.songs.includes(songId)) {
-      return res.status(404).json({ error: 'Song not found in favorites.' });
-    }
-
-    favoriteItems.songs = favoriteItems.songs.filter((id) => id !== songId);
-    await favoriteItems.save();
-
-    res.json({ message: 'Song removed from favorites successfully.' });
-  } catch (error) {
-    res.status(500).json({ error: 'An error occurred while removing the song from favorites.' });
-  }
-});
+// Route for getting favorite items
 router.get('/', authMiddleware.verifyUserToken, async (req, res) => {
   try {
     const user = await User.findById(req.userId);
-
     if (!user) {
       return res.status(404).json({ error: 'User not found.' });
     }
 
     const favoriteItems = await FavoriteItems.findOne({ user: user._id }).populate('movies serials songs');
-
     if (!favoriteItems) {
       return res.status(404).json({ error: 'Favorite items not found.' });
     }

@@ -1,5 +1,3 @@
-// models/FavoriteItems.js
-
 const mongoose = require('mongoose');
 
 const favoriteItemsSchema = new mongoose.Schema({
@@ -8,18 +6,10 @@ const favoriteItemsSchema = new mongoose.Schema({
     ref: 'User',
     required: true,
   },
-  movies: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Movie',
-  }],
-  serials: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Serial',
-  }],
-  songs: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Song',
-  }],
+  movies: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Movie' }],
+  serials: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Serial' }],
+  songs: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Song' }],
 });
 
-module.exports = mongoose.model('FavoriteItems', favoriteItemsSchema);
+module.exports=mongoose.model('FavoriteItems', favoriteItemsSchema);
+
