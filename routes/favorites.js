@@ -4,8 +4,8 @@ const authMiddleware = require('../middlewares/auth');
 const User = require('../models/User');
 const Movie = require('../models/Movie');
 const Serial = require('../models/Serial');
-const Song = require('../models/Song');
-const FavoriteItems = require('../models/FavoriteItems');
+const Song = require('../models/Song')
+const FavoriteItems = require('../models/FavouriteItem');
 
 // Add movie to favorites
 router.post('/movies', authMiddleware.verifyUserToken, async (req, res) => {
