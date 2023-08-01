@@ -17,6 +17,10 @@ const userSchema = new mongoose.Schema({
     required: true,
   },
   image: String, // File path or URL for the user's image
+  favoriteItems: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'FavoriteItems',
+  },
 });
 
 module.exports = mongoose.model('User', userSchema);
