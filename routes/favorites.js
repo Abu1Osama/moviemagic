@@ -6,9 +6,12 @@ const Movie = require('../models/Movie');
 const Serial = require('../models/Serial');
 const Song = require('../models/Song')
 const FavoriteItems = require('../models/FavouriteItem');
+const mongoose = require("mongoose");
+const ObjectId = mongoose.Types.ObjectId;
+const objectId = new ObjectId();
 
 // Add movie to favorites
-router.post('/movies', authMiddleware.verifyUserToken, async (req, res) => {
+router.post('/', authMiddleware.verifyUserToken, async (req, res) => {
   try {
     const { movieId } = req.body;
     const user = await User.findById(req.userId);
@@ -43,7 +46,7 @@ router.post('/movies', authMiddleware.verifyUserToken, async (req, res) => {
 });
 
 // Remove movie from favorites
-router.delete('/movies/:movieId', authMiddleware.verifyUserToken, async (req, res) => {
+router.delete('/:Id', authMiddleware.verifyUserToken, async (req, res) => {
   try {
     const { movieId } = req.params;
     const user = await User.findById(req.userId);
@@ -72,7 +75,7 @@ router.delete('/movies/:movieId', authMiddleware.verifyUserToken, async (req, re
 });
 
 // Add TV serial to favorites
-router.post('/serials', authMiddleware.verifyUserToken, async (req, res) => {
+router.post('/', authMiddleware.verifyUserToken, async (req, res) => {
   try {
     const { serialId } = req.body;
     const user = await User.findById(req.userId);
@@ -107,7 +110,7 @@ router.post('/serials', authMiddleware.verifyUserToken, async (req, res) => {
 });
 
 // Remove TV serial from favorites
-router.delete('/serials/:serialId', authMiddleware.verifyUserToken, async (req, res) => {
+router.delete('/:Id', authMiddleware.verifyUserToken, async (req, res) => {
   try {
     const { serialId } = req.params;
     const user = await User.findById(req.userId);
@@ -136,7 +139,7 @@ router.delete('/serials/:serialId', authMiddleware.verifyUserToken, async (req, 
 });
 
 // Add song to favorites
-router.post('/songs', authMiddleware.verifyUserToken, async (req, res) => {
+router.post('/', authMiddleware.verifyUserToken, async (req, res) => {
   try {
     const { songId } = req.body;
     const user = await User.findById(req.userId);
@@ -171,7 +174,7 @@ router.post('/songs', authMiddleware.verifyUserToken, async (req, res) => {
 });
 
 // Remove song from favorites
-router.delete('/songs/:songId', authMiddleware.verifyUserToken, async (req, res) => {
+router.delete('/:Id', authMiddleware.verifyUserToken, async (req, res) => {
   try {
     const { songId } = req.params;
     const user = await User.findById(req.userId);
@@ -198,7 +201,7 @@ router.delete('/songs/:songId', authMiddleware.verifyUserToken, async (req, res)
     res.status(500).json({ error: 'An error occurred while removing the song from favorites.' });
   }
 });
-router.get('/favorites', authMiddleware.verifyUserToken, async (req, res) => {
+router.get('/', authMiddleware.verifyUserToken, async (req, res) => {
   try {
     const user = await User.findById(req.userId);
 
